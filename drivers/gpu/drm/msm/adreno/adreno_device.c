@@ -264,8 +264,16 @@ static int adreno_probe(struct platform_device *pdev)
 	if (ret)
 		return ret;
 
-	if (of_device_is_compatible(pdev->dev.of_node, "amd,imageon"))
-		adreno_device_register_headless();
+	{
+		struct device_node *mdss_node = of_find_compatible_node(NULL, NULL, "qcom,mdss");
+
+		/* headless:dts 里 qcom,mdss 缺失或 disabled 时,自主注册 dummy msm master,
+		 * 让 Adreno 绑定并暴露 /dev/dri/renderD128(OpenStick / UFI / jz02 这类无屏棒子) */
+		if (of_device_is_compatible(pdev->dev.of_node, "amd,imageon") ||
+		    !mdss_node || !of_device_is_available(mdss_node))
+			adreno_device_register_headless();
+		of_node_put(mdss_node);
+	}
 
 	return 0;
 }

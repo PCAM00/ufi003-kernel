@@ -147,3 +147,8 @@
 		bias-disable;
 	};
 };
+
+/* Adreno 306:headless GPU */
+&gpu {
+	status = "okay";
+};

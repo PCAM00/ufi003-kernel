@@ -32,7 +32,7 @@
 		};
 	};
 
-	leds {
+	leds: leds {
 		compatible = "gpio-leds";
 
 		pinctrl-0 = <&gpio_leds_default>;
@@ -144,4 +144,9 @@
 		drive-strength = <2>;
 		bias-disable;
 	};
+};
+
+/* Adreno 306:headless GPU(配合 6.12 的 adreno headless 补丁) */
+&gpu {
+	status = "okay";
 };
